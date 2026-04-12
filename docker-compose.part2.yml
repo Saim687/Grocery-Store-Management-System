@@ -39,6 +39,7 @@ services:
       - "4000:3000"
     volumes:
       - ./:/app
+      - node_modules_part2:/app/node_modules
 
   admin_part2:
     image: node:20-alpine
@@ -61,6 +62,8 @@ services:
       - "4001:3001"
     volumes:
       - ./:/app
+      - node_modules_part2:/app/node_modules
 
 volumes:
   mysql_data_part2:
+  node_modules_part2:

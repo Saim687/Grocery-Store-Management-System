@@ -25,7 +25,7 @@ pipeline {
 
     stage('Containerized Build') {
       steps {
-        sh 'docker run --rm -v "$WORKSPACE/$APP_DIR:/app" -w /app node:20-alpine sh -c "npm ci"'
+        sh 'docker run --rm -v "$WORKSPACE/$APP_DIR:/app" -v grocery_deploy_node_modules:/app/node_modules -w /app node:20-alpine sh -c "npm ci"'
       }
     }
 
