@@ -15,4 +15,4 @@ COPY tests/package*.json ./
 RUN npm install
 COPY tests/ .
 
-CMD ["node", "grocery_tests.js"]
+CMD ["node", "grocery_tests.js"] 
