@@ -7,7 +7,8 @@ async function runTests() {
     options.addArguments('--headless', '--no-sandbox', '--disable-dev-shm-usage');
 
     let driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
-    let passed = 0; let failed = 0;
+    let passed = 0; 
+    let failed = 0;
 
     // Helper function to run a test and count it
     async function test(name, testLogic) {
@@ -24,18 +25,35 @@ async function runTests() {
     console.log("🚀 Starting the 15 Automated Tests...\n");
 
     try {
-        const customerUrl = 'http://grocery-customer:3000/login.html';
+        // URLs mapped to the Docker container names defined in your docker-compose
+        const customerUrl = 'http://grocery-customer:3000/customerlogin.html';
         const adminUrl = 'http://grocery-admin:3001/adminlogin.html';
 
         // --- CUSTOMER TESTS ---
         await driver.get(customerUrl);
-        await test("Test 1: Customer login page loads", async () => { await driver.getTitle(); });
-        await test("Test 2: Customer password field exists", async () => { await driver.findElement(By.name('password')); });
-        await test("Test 3: Customer login button exists", async () => { await driver.findElement(By.css('button[type="submit"]')); });
-        await test("Test 4: Customer logo is displayed", async () => { await driver.findElement(By.className('logo')); });
-        await test("Test 5: Customer main container exists", async () => { await driver.findElement(By.className('main-container')); });
+        
+        await test("Test 1: Customer login page loads", async () => { 
+            await driver.getTitle(); 
+        });
 
-        // --- ADMIN TESTS (Based on your exact HTML) ---
+        await test("Test 2: Customer password field exists", async () => { 
+            // Specifically targeting the login form to avoid confusion with the signup form
+            await driver.findElement(By.css('#login-form input[name="password"]')); 
+        });
+
+        await test("Test 3: Customer login button exists", async () => { 
+            await driver.findElement(By.css('#login-form button.submit-btn')); 
+        });
+
+        await test("Test 4: Customer logo is displayed", async () => { 
+            await driver.findElement(By.className('logo')); 
+        });
+
+        await test("Test 5: Customer main container exists", async () => { 
+            await driver.findElement(By.className('main-container')); 
+        });
+
+        // --- ADMIN TESTS ---
         await driver.get(adminUrl);
         
         await test("Test 6: Admin login page loads", async () => { 
@@ -92,7 +110,8 @@ async function runTests() {
     } finally {
         console.log(`\n📊 Final Score: ${passed}/15 Passed.`);
         await driver.quit();
-        if (failed > 0) process.exit(1); // Tells Jenkins if we failed
+        // If even one test fails, we exit with 1 so Jenkins marks the build as FAILED
+        if (failed > 0) process.exit(1); 
     }
 }
 
