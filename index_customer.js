@@ -94,7 +94,7 @@ app.post('/auth/signup', async (req, res) => {
 app.post('/auth/login',(req,res) => {
     const{email,password} = req.body;
     if(!email || !password){
-        return res.status(400).json({message: 'Please fill all fields'});
+        return res.status(400).json({message: 'Please f all fields'});
     }
 
     db.query('SELECT * FROM users WHERE email = ?', [email],async (err,results) =>{

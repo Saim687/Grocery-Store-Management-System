@@ -43,4 +43,4 @@ Notes
 - MySQL container is exposed on host port `3307` to avoid conflicts with local MySQL on `3306`.
 - App images use tags:
   - ${DOCKERHUB_USERNAME}/grocery-customer:latest
-  - ${DOCKERHUB_USERNAME}/grocery-admin:latest
+  - ${DOCKERHUB_USERNAME}/grocery-admin:latest hi there is my pipeline working

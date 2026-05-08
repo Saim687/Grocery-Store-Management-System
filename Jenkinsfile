@@ -1,6 +1,11 @@
 pipeline {
   agent any
 
+  environment {
+    APP_DIR = '.'
+    PART2_COMPOSE = 'docker-compose.part2.yml'
+  }
+
   triggers {
     githubPush()
   }
@@ -8,6 +13,7 @@ pipeline {
   options {
     timestamps()
     disableConcurrentBuilds()
+    skipDefaultCheckout(true)
   }
 
   stages {
@@ -19,21 +25,21 @@ pipeline {
 
     stage('Containerized Build') {
       steps {
-        sh 'docker run --rm -v "$WORKSPACE:/app" -w /app node:20-alpine sh -c "npm ci"'
+        sh 'docker run --rm -v "$WORKSPACE/$APP_DIR:/app" -v grocery_deploy_node_modules:/app/node_modules -w /app node:20-alpine sh -c "npm ci"'
       }
     }
 
     stage('Deploy Part-II Stack') {
       steps {
-        sh 'docker compose -f docker-compose.part2.yml up -d'
-        sh 'docker compose -f docker-compose.part2.yml ps'
+        sh 'docker compose -f "$PART2_COMPOSE" up -d'
+        sh 'docker compose -f "$PART2_COMPOSE" ps'
       }
     }
   }
 
   post {
     always {
-      sh 'docker compose -f docker-compose.part2.yml ps || true'
+      sh 'docker compose -f "$PART2_COMPOSE" ps || true'
     }
   }
 }
